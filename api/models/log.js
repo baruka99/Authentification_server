@@ -7,10 +7,13 @@ module.exports = mongoose.model('Log', mongoose.Schema({
     status: Number,
     header: {
         ipAddress: String,
-
     },
     client: {
         typeClient: String,
         key: String,
+    },
+    addedAt: {
+        type: Date,
+        default: Date.now
     }
 }))
