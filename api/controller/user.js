@@ -1,33 +1,37 @@
+const mongoose = require('mongoose')
 const User = require('../models/user_model');
 const Credential = require('../models/creadential')
 const { STATUSCODE } = require('../configs/data')
 const sgMail = require('@sendgrid/mail');
-const { randomString } = require('../shared/utils')
 const bcrypt = require('bcryptjs');
+
 
 exports.adminSignUp = (req, res) => {
     const email = req.body.email;
+
+
     User.findOne(
         { email: email }, (err, user) => {
             if (err)
-                res.status(STATUSCODE.INTERNALSERVERERROR.code).json(
+                res.status(500).json(
                     {
                         message: err.message
                     }
                 );
             else {
                 if (user) {
-                    res.status(STATUSCODE.CONFLIT.code).json(
+                    res.status(409).json(
                         {
-                            message: STATUSCODE.CONFLIT.message
+                            message: "Une erreur s'est produite"
                         }
                     );
                 } else {
-                    const adminCode = randomString(35);
+                    let adminCode = randomString(35);
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                    console.log(adminCode)
                     const msg = {
                         to: email,
-                        from: 'baruka99.david@gmail.com', //the email address or domain you verified above
+                        from: 'contact.upperz@gmail.com', //the email address or domain you verified above
                         subject: 'Mot de passe compte admin L1000pay',
                         text: "Voici votre mot de passe admin: " + adminCode,
                         html: "Voici votre mot de passe admin: " + adminCode,
@@ -97,9 +101,9 @@ exports.adminSignUp = (req, res) => {
                         )
                         .catch(
                             err => {
-                                res.status(STATUSCODE.INTERNALSERVERERROR.code).json(
+                                res.status(500).json(
                                     {
-                                        message: err.message
+                                        message: err
                                     }
                                 );
                             }
@@ -112,4 +116,36 @@ exports.adminSignUp = (req, res) => {
 }
 
 
+
+
 // notice: in the login part the client must tel us the ressource that the end user looks for
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function randomString(length) {
+    const caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$&(){}[]:?./|"
+    let finalString = "";
+
+    for (let i = 0; i < length; i++) {
+
+        finalString += caracteres[Math.random() * length | 0]
+    }
+    return finalString;
+}

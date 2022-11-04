@@ -7,7 +7,7 @@ const emailValidation = (email) => {
 }
 
 module.exports = mongoose.model(('User'), mongoose.Schema({
-    _id: mongoose.Schema.Types.objectId,
+    _id: mongoose.Schema.Types.ObjectId,
     firstName: String,
     lastName: String,
     email: {

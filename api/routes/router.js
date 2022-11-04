@@ -1,6 +1,16 @@
 const express = require('express');
-
 const route = express.Router();
+
+const user = require('../controller/user')
+
+
+// *** END USERS ***
+
+// Admin
+route.post('/auth/admin', user.adminSignUp)
+
+
+
 
 route.get("/", (req, res) => {
     // console.log(req.headers);
