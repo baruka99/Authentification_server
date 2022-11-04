@@ -1,9 +1,17 @@
 const express = require('express');
 
-const router = express.Router();
+const route = express.Router();
 
-router.get("/", (req, res) => {
+route.get("/", (req, res) => {
+    // console.log(req.headers);
     res.status(200).json({
-        message: "Welcom to the Account L1000 Services server"
+        headers: req.headers,
+        message: "Welcome to the Account L1000 Services server"
     });
 })
+
+route.post("/cspreport", (req, res) => {
+    console.log(req.body);
+})
+
+module.exports = route

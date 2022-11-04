@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const config = require('./config/config');
+const config = require('./configs/config');
 const routes = require('./api/routes/router');
 const morgan = require('morgan');
+
 
 const app = express();
 
@@ -34,9 +35,19 @@ app.use(express.urlencoded(
 ));
 
 
+
+
 app.use((req, res, next) => {
+
+
+    // res.setHeader(
+
+    // );
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Autorization");
+    res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Autorization", 'Content-Security-Policy-Report-Only',
+        "default-src 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; frame-src 'self'",
+        'Report-To',
+        '{"group":"csp-endpoint","max_age":10886400,"endpoints":[{"url":"http://192.168.117.168:8180/api/v1/__cspreport__"}],"include_subdomains":true}');
 
     if (req.method === "OPTIONS") {
         res.header('Access-Control-Allow-Methods', 'PUT,POST,PATCH,DELETE,GET');
@@ -53,11 +64,11 @@ app.use((req, res, next) => {
 app.use('/api/v1', routes);
 app.use(express.static("uploads"));
 
-app.use((req, res, next) => {
-    const error = new Error('Not found');
-    error.status = 404;
-    next(error);
-});
+// app.use((req, res, next) => {
+//     const error = new Error('Not found');
+//     error.status = 404;
+//     next(error);
+// });
 
 
 
