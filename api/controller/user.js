@@ -110,3 +110,6 @@ exports.adminSignUp = (req, res) => {
         }
     );
 }
+
+
+// notice: in the login part the client must tel us the ressource that the end user looks for
