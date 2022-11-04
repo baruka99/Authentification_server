@@ -1,6 +1,6 @@
-const { Client } = require('../api/models/client')
+const { Client } = require('../models/client')
 const { STATUSCODE, ROLE } = require('./data')
-const { Credential } = require('../api/models/creadential')
+const { Credential } = require('../models/creadential')
 
 
 function isAllowed(req, res, next) {

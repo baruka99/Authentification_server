@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const config = require('./configs/config');
+const config = require('./api/configs/config');
 const routes = require('./api/routes/router');
 const morgan = require('morgan');
 
@@ -39,10 +39,6 @@ app.use(express.urlencoded(
 
 app.use((req, res, next) => {
 
-
-    // res.setHeader(
-
-    // );
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Autorization", 'Content-Security-Policy-Report-Only',
         "default-src 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'; frame-src 'self'",
@@ -57,18 +53,15 @@ app.use((req, res, next) => {
 });
 
 
-
-
-
 // this containes all about our routes and middlewires
 app.use('/api/v1', routes);
 app.use(express.static("uploads"));
 
-// app.use((req, res, next) => {
-//     const error = new Error('Not found');
-//     error.status = 404;
-//     next(error);
-// });
+app.use((req, res, next) => {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+});
 
 
 
