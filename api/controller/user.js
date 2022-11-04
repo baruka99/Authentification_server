@@ -1,7 +1,9 @@
 const User = require('../models/user_model');
+const Credential = require('../models/creadential')
 const { STATUSCODE } = require('../configs/data')
 const sgMail = require('@sendgrid/mail');
 const { randomString } = require('../shared/utils')
+const bcrypt = require('bcryptjs');
 
 exports.adminSignUp = (req, res) => {
     const email = req.body.email;
@@ -21,7 +23,7 @@ exports.adminSignUp = (req, res) => {
                         }
                     );
                 } else {
-                    const adminCode = randomString(75);
+                    const adminCode = randomString(35);
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                     const msg = {
                         to: email,
@@ -36,8 +38,61 @@ exports.adminSignUp = (req, res) => {
                     sgMail
                         .send(msg)
                         .then(
-                            (sent) => {
+                            (_) => {
+                                bcrypt.genSalt(
+                                    10,
+                                    function (err, salt) {
+                                        if (err) {
+                                            res.status(500).json({
+                                                message: err.message
+                                            });
+                                        } else {
+                                            bcrypt.hash(adminCode, salt, function (err, hash) {
+                                                if (err) {
+                                                    res.status(500).json({
+                                                        message: err.message
+                                                    });
+                                                } else {
+                                                    const user = User({
+                                                        _id: new mongoose.Types.ObjectId,
+                                                        email: email,
+                                                        createdAt: Date.now()
+                                                    });
+                                                    user.save()
+                                                        .then((savedUser) => {
 
+                                                            const creadential = Credential(
+                                                                {
+                                                                    _id: new mongoose.Types.ObjectId,
+                                                                    username: email,
+                                                                    password: hash,
+                                                                    user: savedUser,
+                                                                    role: "admin",
+                                                                    createdAt: Date.now()
+                                                                }
+                                                            );
+                                                            creadential.save()
+                                                                .then(_ => {
+                                                                    res.status(201).json({
+                                                                        message: "L'administrateur a été bien enrégistré",
+                                                                    });
+                                                                })
+
+                                                        })
+                                                        .catch(
+                                                            err => {
+                                                                res.status(500).json({
+                                                                    message: err.message
+                                                                })
+
+                                                            }
+                                                        );
+                                                }
+                                            })
+                                        }
+
+                                    }
+                                )
                             }
                         )
                         .catch(

@@ -8,6 +8,11 @@ function randomString(length) {
     return finalString;
 }
 
+function sha56(input) {
+
+}
+
 exports.module = {
-    randomString
+    randomString,
+    sha56
 }

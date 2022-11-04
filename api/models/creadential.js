@@ -15,6 +15,7 @@ module.exports = mongoose.model("Credential", mongoose.Schema({
     },
     role: String, // BASIC,ADMIN,USER,AGENT,DRIVER
     function: {
+        // the function will be of form ax+b
         a: String,
         b: String,
     },
