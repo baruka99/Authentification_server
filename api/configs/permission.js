@@ -57,13 +57,16 @@ function isAdmin(req, res, next) {
             }
         }, (err, admin) => {
             if (err)
-                res.status(STATUSCODE.INTERNALSERVERERROR.code).json(
+                res.status(500).json(
                     {
-                        message: STATUSCODE.INTERNALSERVERERROR.message
+                        message: err.message
                     }
                 );
-            if (admin != null && admin.role === ROLE.ADMIN) next();
-            res.status(STATUSCODE.UNAUTHORIZED.code).json();
+            if (admin != null && admin.role === "admin") {
+                res.locals.admin = admin
+                next();
+            }
+            res.status(403).json();
 
         }
     ).populate("user")
