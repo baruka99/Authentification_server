@@ -38,7 +38,7 @@ Status\
  `403`: Unauthorized 
 
  2. Authentification/ Login\
-le login se fait comme tout autre compte utilisateur, l'admin doit passer le nom d'utilisateur et le mot de passe et si les indentifiants sont correctes, le serveur lui renvera son `credential Id` qui lui permettra d'effectuer une requete de type `GET` pour obtenir son jeton d'authentification.
+le login se fait comme tout autre compte utilisateur, l'admin doit passer le nom d'utilisateur et le mot de passe et si les indentifiants sont correctes, le serveur lui renvera son `credential Id` (qui est un id hashé) qui lui permettra d'effectuer une requete de type `GET` pour obtenir son jeton d'authentification.
 
 Methode: `POST`\
 EndPoint : `login/admin/super`\

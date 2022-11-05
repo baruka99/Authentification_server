@@ -7,9 +7,14 @@ const user = require('../controller/user')
 // *** END USERS ***
 
 // Admin
-route.post('/auth/admin', user.adminSignUp)
+route.post('/auth/admin/super', user.sAdminSignUp)
+route.post('/login/admin/super', user.sAdminLogin)
 
 
+
+//common user route
+
+route.post('/auth/token/', user.getToken)
 
 
 route.get("/", (req, res) => {

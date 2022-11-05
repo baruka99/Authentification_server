@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const { randomString, sha256 } = require('../shared/utils.js');
 const jwt = require('jsonwebtoken')
 
-exports.adminSignUp = (req, res) => {
+exports.sAdminSignUp = (req, res) => {
     const email = req.body.email;
     User.findOne(
         { email: email }, (err, user) => {
@@ -114,51 +114,93 @@ exports.adminSignUp = (req, res) => {
 
 // LOGIN ADMIN
 
-exports.loginAdmin = async (req, res) => {
+exports.sAdminLogin = async (req, res) => {
     const { username, password } = req.body;
-    const adminCredential = await Credential.find({ username }).populate('user');
+    const adminCredential = await Credential.findOne({ username }).populate('user');
 
-    if (!admin) res.status(409).json({
+    if (!adminCredential) res.status(409).json({
         message: "Identifiants incorrect"
     })
 
-    const isPasswordCorrect = await bcrypt.compare(password, adminCredential.password);
-    if (isPasswordCorrect) {
-        const refreshToken = jwt.sign(
-            {
-                userId: adminCredential.user._id,
-            },
-            'secret',
-            {
-                expiresIn: "360d"
-            }
-        );
-        adminCredential.token.refresh = refreshToken;
-        adminCredential.save()
-            .then(
-                (_) => res.status(200).json({
-                    message: "Vous avez été bien connecté",
-                    credential: adminCredential._id,
-                })
-            )
-            .catch(
-                err => res.status(500).json(
+    bcrypt.compare(
+        password, adminCredential.password, function (err, isCorrect) {
+            if (isCorrect) {
+                const refreshToken = jwt.sign(
                     {
-                        message: err.message
+                        userId: adminCredential.user._id,
+                    },
+                    'secret',
+                    {
+                        expiresIn: "360d"
                     }
-                )
-            );
-    } else {
-        res.status(409).json({
-            message: "Identifiants incorrect"
-        })
-    }
+                );
+                const creadential = randomString()
+                adminCredential.token.refresh = refreshToken;
+                adminCredential.otpCode = sha256(creadential);
+                adminCredential.save()
+                    .then(
+                        (cred) => {
+                            console.log(creadential._id)
+                            res.status(200).json({
+                                message: "Vous avez été bien connecté",
+                                credId: {
+                                    id: cred._id,
+                                    value: creadential
+                                },
+
+                            })
+                        }
+                    )
+                    .catch(
+                        err => res.status(500).json(
+                            {
+                                message: err.message
+                            }
+                        )
+                    );
+            }
+
+            else {
+                res.status(409).json({
+                    message: "Identifiants incorrect"
+                })
+            }
+        }
+    );
 
 }
 
 
-exports.getToken = (req, res) => {
-    const credentialId = req.params.creadentialId;
+exports.getToken = async (req, res) => {
+    const { credId, value } = req.body;
+
+    Credential.findById(credId, (err, credential) => {
+        if (err) {
+            res.status(500).json({
+                message: err.message
+            })
+        } else {
+            if (credential) {
+                if (credential.otpCode == sha256(value)) {
+                    res.status(200).json({
+                        token: credential.token.refresh,
+                        user: {
+                            email: credential.user.email,
+                            phone: credential.user.phone,
+                            createdAt: credential.user.createdAt,
+                            firstName: credential.user.firstName,
+                            lastName: credential.user.lastName,
+                        },
+                    })
+                }
+            } else {
+                res.status(409).json({
+                    message: "Identifiants incorrect"
+                })
+            }
+        }
+
+    }).populate('user')
 }
 
 // notice: in the login part the client must tel us the ressource that the end user looks for
