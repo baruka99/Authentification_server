@@ -1,5 +1,4 @@
 const { Client } = require('../models/client')
-const { STATUSCODE, ROLE } = require('./data')
 const { Credential } = require('../models/creadential')
 
 
@@ -12,33 +11,33 @@ function isAllowed(req, res, next) {
         { key: clientKey },
         (err, client) => {
             if (err) {
-                res.status(STATUSCODE.INTERNALSERVERERROR.code).json(
+                res.status(500).json(
                     {
-                        message: STATUSCODE.INTERNALSERVERERROR.message
+                        message: err.message
                     }
                 );
             } else {
-                if (client != null) {
+                if (client) {
                     Client.findOne(
                         { key: ressourceKey },
                         (err, ressource) => {
                             if (err) {
-                                res.status(STATUSCODE.INTERNALSERVERERROR.code).json(
+                                res.status(500).json(
                                     {
-                                        message: STATUSCODE.INTERNALSERVERERROR.message
+                                        message: err.message
                                     }
                                 );
                             } else {
-                                if (ressource != null) {
+                                if (ressource) {
                                     next();
                                 } else {
-                                    res.status(STATUSCODE.UNAUTHORIZED.code).json();
+                                    res.status(403).json();
                                 }
                             }
                         }
                     )
                 } else {
-                    res.status(STATUSCODE.UNAUTHORIZED.code).json();
+                    res.status(403).json();
                 }
             }
 

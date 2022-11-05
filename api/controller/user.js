@@ -4,11 +4,10 @@ const Credential = require('../models/creadential')
 const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const { randomString, sha256 } = require('../shared/utils.js');
+const jwt = require('jsonwebtoken')
 
-exports.adminSignUp = (req, res) => {
+exports.sAdminSignUp = (req, res) => {
     const email = req.body.email;
-
-
     User.findOne(
         { email: email }, (err, user) => {
             if (err)
@@ -28,7 +27,6 @@ exports.adminSignUp = (req, res) => {
 
                     let adminCode = sha256(randomString());
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                    console.log(adminCode)
                     const msg = {
                         to: email,
                         from: 'contact.upperz@gmail.com', //the email address or domain you verified above
@@ -38,7 +36,6 @@ exports.adminSignUp = (req, res) => {
                     };
 
                     // sending the code to the admin and then save the admin
-
                     sgMail
                         .send(msg)
                         .then(
@@ -115,8 +112,96 @@ exports.adminSignUp = (req, res) => {
     );
 }
 
+// LOGIN ADMIN
+
+exports.sAdminLogin = async (req, res) => {
+    const { username, password } = req.body;
+    const adminCredential = await Credential.findOne({ username }).populate('user');
+
+    if (!adminCredential) res.status(409).json({
+        message: "Identifiants incorrect"
+    })
+
+    bcrypt.compare(
+        password, adminCredential.password, function (err, isCorrect) {
+            if (isCorrect) {
+                const refreshToken = jwt.sign(
+                    {
+                        userId: adminCredential.user._id,
+                    },
+                    'secret',
+                    {
+                        expiresIn: "360d"
+                    }
+                );
+                const creadential = randomString()
+                adminCredential.token.refresh = refreshToken;
+                adminCredential.otpCode = sha256(creadential);
+                adminCredential.save()
+                    .then(
+                        (cred) => {
+                            console.log(creadential._id)
+                            res.status(200).json({
+                                message: "Vous avez été bien connecté",
+                                credId: {
+                                    id: cred._id,
+                                    value: creadential
+                                },
+
+                            })
+                        }
+                    )
+                    .catch(
+                        err => res.status(500).json(
+                            {
+                                message: err.message
+                            }
+                        )
+                    );
+            }
+
+            else {
+                res.status(409).json({
+                    message: "Identifiants incorrect"
+                })
+            }
+        }
+    );
+
+}
 
 
+exports.getToken = async (req, res) => {
+    const { credId, value } = req.body;
+
+    Credential.findById(credId, (err, credential) => {
+        if (err) {
+            res.status(500).json({
+                message: err.message
+            })
+        } else {
+            if (credential) {
+                if (credential.otpCode == sha256(value)) {
+                    res.status(200).json({
+                        token: credential.token.refresh,
+                        user: {
+                            email: credential.user.email,
+                            phone: credential.user.phone,
+                            createdAt: credential.user.createdAt,
+                            firstName: credential.user.firstName,
+                            lastName: credential.user.lastName,
+                        },
+                    })
+                }
+            } else {
+                res.status(409).json({
+                    message: "Identifiants incorrect"
+                })
+            }
+        }
+
+    }).populate('user')
+}
 
 // notice: in the login part the client must tel us the ressource that the end user looks for
 

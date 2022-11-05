@@ -6,11 +6,15 @@ const mongoose = require('mongoose')
 const User = require('../models/user_model');
 const Credential = require('../models/creadential')
 const sgMail = require('@sendgrid/mail');
-
-
+const Client = require('../models/client')
+const { randomString, sha256 } = require('../shared/utils.js');
 
 exports.registerClient = (req, res) => {
     const { } = req.body;
     const admin = res.admin;
+
+    Client.find(
+
+    );
 
 }
