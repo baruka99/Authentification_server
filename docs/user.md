@@ -9,7 +9,10 @@ Comme le dit plus haut, nous avons différent type d'utilisateur et chacun se ca
 ### 2.1 Le super admin
 Le super admin est l'administrateur principale dans la plateforme, ce dernier a le privillege de `supprimer les autres admins et tout autre utilisateur`, il peut `supprimer un service`, et aussi `supprimer une application cliente de la plateforme`. Nous conseillons grandemment que les identifiant de ce dernier soit jalousement gardées et ne tombent pas entre les mains des personnes malveillantes.\
 \
-Le super admin est crée dans la platforme via un console et sera crée lors du premier deploiement, et ne sera jamais supprimé par la suite ni aucune possibilité de modifier ses identifiants par la suite. Seul son jeton d'accès sera modifié et cela par le server lui-meme.\
+Le super admin est crée dans la platforme via un console et sera crée lors du premier deploiement, et ne sera jamais supprimé par la suite ni aucune possibilité de modifier ses identifiants par la suite. Seul son jeton d'accès sera modifié et cela par le server lui-meme.\\
+
+`Note: une fois le super admin est crée il ne peut plus l'etre`
+
 \
 Pour authentifier un super admin, il suffit juste de passer l'`addresse mail` du super admin, un mot de passe de `64 caractères` lui sera envoyé dans sa boite `mail`, ce qui lui permettra de s'authentifier dans la suite. \
 \
