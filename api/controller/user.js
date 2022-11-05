@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 const User = require('../models/user_model');
 const Credential = require('../models/creadential')
-const { STATUSCODE } = require('../configs/data')
 const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
-
+const { randomString, sha256 } = require('../shared/utils.js');
 
 exports.adminSignUp = (req, res) => {
     const email = req.body.email;
@@ -26,7 +25,8 @@ exports.adminSignUp = (req, res) => {
                         }
                     );
                 } else {
-                    let adminCode = randomString(35);
+
+                    let adminCode = sha256(randomString());
                     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
                     console.log(adminCode)
                     const msg = {
@@ -125,27 +125,3 @@ exports.adminSignUp = (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function randomString(length) {
-    const caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$&(){}[]:?./|"
-    let finalString = "";
-
-    for (let i = 0; i < length; i++) {
-
-        finalString += caracteres[Math.random() * length | 0]
-    }
-    return finalString;
-}

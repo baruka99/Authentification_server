@@ -13,7 +13,4 @@ exports.registerClient = (req, res) => {
     const { } = req.body;
     const admin = res.admin;
 
-
-
-
 }
