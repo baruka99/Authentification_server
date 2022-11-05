@@ -12,7 +12,6 @@ const { randomString, sha256 } = require('../shared/utils.js');
 exports.registerClient = (req, res) => {
     const { } = req.body;
     const admin = res.admin;
-
     Client.find(
 
     );
