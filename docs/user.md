@@ -88,7 +88,7 @@ Body:
 Responses payload: 
 ```
 {
-    "token": "eyJhbGciOiJIUzIPNiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY1Yjc3Y2ExMThlOWHIBjcwOWYwMDYiLCJpYXQiOjE2Njc2MTgwNjAsImV4cCI6MTY5ODcyMjA2MH0.u0qMS4qAetcf5I1dyvkB9b1CxMijAj-Is7d1cjoGxmA",
+    "token": "token",
     "user": {
         "email": "email",
         "phone": {
