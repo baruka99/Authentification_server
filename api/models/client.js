@@ -18,6 +18,9 @@ module.exports = mongoose.model("Client", mongoose.Schema({
         },
     },
     description: String,
+    subscribeTo: [
+        String, // those are keys of ressources the client is eligible to.
+    ],
     redirectUrl: String, // the url to redirect after authentifiate the user
     key: String,
     addedAt: {
