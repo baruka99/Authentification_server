@@ -46,7 +46,7 @@ le login se fait comme tout autre compte utilisateur, l'admin doit passer le nom
 Methode: `POST`\
 EndPoint : `login/admin/super`\
 Content-type: `application-json`\
-Body: \
+Body: 
 ```
 {
     "username": "exemple@domain.com",
@@ -57,7 +57,11 @@ Responses payload:
 ```
 {
     "message": "Vous avez été bien connecté",
-    "credential": id
+    "cred": {
+        "cred" : id,
+        "value" : code
+    },
+    
 }
 ```
 
@@ -65,5 +69,42 @@ Status\
  `200` : Success\
  `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
  `500`: Internal server error\
- `403`: Unauthorized
+ `403`: Unauthorized\
+ \
+Apres avoir recu ce code, ce dernier vous permettra d'optenir le token pour permettre d'effectuer les differente operations tel que la creation d'une application client dans la plateforme, les ressources, etc.\
+\
+3. obtention du token\
+\
+Methode: `POST`\
+EndPoint : `auth/token/`\
+Content-type: `application-json`\
+Body: 
+```
+{
+    "credId": "id",
+    "value": "code"
+}
+```
+Responses payload: 
+```
+{
+    "token": "eyJhbGciOiJIUzIPNiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY1Yjc3Y2ExMThlOWHIBjcwOWYwMDYiLCJpYXQiOjE2Njc2MTgwNjAsImV4cCI6MTY5ODcyMjA2MH0.u0qMS4qAetcf5I1dyvkB9b1CxMijAj-Is7d1cjoGxmA",
+    "user": {
+        "email": "email",
+        "phone": {
+            "code": "code",
+            "number": "number"
+        },
+        "createdAt": "Date"
+    }
+}
+```
+
+Status\
+ `200` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized\
+ 
+
 
