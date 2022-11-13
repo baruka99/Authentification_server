@@ -78,11 +78,16 @@ exports.registerClient = async (req, res) => {
 }
 
 
-exports.edditClient = async (req, res) => {
+exports.update = async (req, res) => {
     const key = req.params.key
     const { owner, description, subscribeTo, redirectUrl, } = req.body
     const upadate = { owner, description, subscribeTo, redirectUrl }
 
+    Object.keys(upadate).forEach(key => {
+        if (upadate[key] === undefined) {
+            delete upadate[key];
+        }
+    });
     try {
         await Client.findOneAndUpdate({ "key": key }, upadate);
         updatedClient = await Client.findOne({ "key": key });
@@ -101,7 +106,7 @@ exports.edditClient = async (req, res) => {
 }
 
 
-exports.findClient = async (req, res) => {
+exports.find = async (req, res) => {
     try {
 
         const clients = await Client.find();
@@ -115,7 +120,7 @@ exports.findClient = async (req, res) => {
 }
 
 
-exports.oneClient = async (req, res) => {
+exports.findOne = async (req, res) => {
     const key = req.params.key;
     try {
         const client = await Client.findOne({ key });

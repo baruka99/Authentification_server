@@ -14,8 +14,9 @@ route.post('/login/admin/super', user.sAdminLogin)
 
 // Client app
 route.post('/client/register', permission.isAdmin, client.registerClient)
-route.get('/clients', permission.isAdmin, client.findClient)
-route.get('/client/:key', permission.isAdmin, client.oneClient)
+route.get('/clients', permission.isAdmin, client.find)
+route.get('/client/:key', permission.isAdmin, client.findOne)
+route.put('/client/:key', permission.isAdmin, client.update)
 
 
 //common user route
