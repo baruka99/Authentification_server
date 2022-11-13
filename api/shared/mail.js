@@ -1,5 +1,5 @@
 function mail(code) {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,12 +17,10 @@ function mail(code) {
           padding: 0px;
           justify-content: center;
           align-items: center;
-          margin: 10px auto;
           width: 100%;
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
         ">
-            <img src="./assets/icon.png" alt="..." style="
+            <img src="./assets/icon.png" alt=" " style="
             width: 150px;
             align-items: center;
             cursor: pointer;
@@ -33,14 +31,15 @@ function mail(code) {
             align-content: center;
           " />
             <div style="
-            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-              rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-            padding: 45px;
+            /* box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+              rgba(27, 31, 35, 0.15) 0px 0px 0px 1px; */
+            border: solid 2px gray;
+            padding: 10px;
             display: block;
             justify-content: space-between;
             align-items: center;
             margin: 10px auto;
-            width: 40%;
+            width: 100%;
           ">
                 <h2 style="
               text-align: center;
@@ -100,7 +99,7 @@ function mail(code) {
                 font-size: 14px;
                 overflow-wrap: break-word;
                 width: 100%;
-              "></p>
+              ">${code}</p>
                 </div>
             </div>
             <div style="
@@ -111,7 +110,7 @@ function mail(code) {
             margin-top: 30px;
             /* 
           justify-content: flex-start;
-          width: 50%;
+          width: 100%;
           flex-wrap: wrap;
           align-items: auto;
           align-self: center;
@@ -134,12 +133,12 @@ function mail(code) {
               align-items: center;
               align-self: center;
               text-decoration: none;
-            "><i
+            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
               class="fa-brands fa-facebook-f"
               style="display: block; width: 15px; color: gray"
             ></i
           ></a>
-                <a href="/index.html" target="_blank" style="
+                <a href="/index.html " target="_blank " style="
               padding: 5px;
               border: 0.5px solid gray;
               width: 30px;
@@ -153,12 +152,12 @@ function mail(code) {
               align-items: center;
               align-self: center;
               text-decoration: none;
-            "><i
+            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
               class="fa-brands fa-instagram"
               style="display: block; width: 15px; color: gray"
             ></i
           ></a>
-                <a href="/index.html" target="_blank" style="
+                <a href="/index.html " target="_blank " style="
               padding: 5px;
               border: 0.5px solid gray;
               width: 30px;
@@ -172,7 +171,7 @@ function mail(code) {
               align-items: center;
               align-self: center;
               text-decoration: none;
-            "><i
+            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
               class="fa-brands fa-linkedin-in"
               style="display: block; width: 15px; color: gray"
             ></i

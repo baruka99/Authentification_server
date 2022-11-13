@@ -17,7 +17,8 @@ route.get('/client/:key', permission.isAdmin, client.findOne)
 route.put('/client/:key', permission.isAdmin, client.update)
 
 // *** END USERS ***
-route.post('/user/auth/:client/:ressource', permission.isAllowed, user.userSignUp)
+route.post('/user/signup/:client/:ressource', permission.isAllowed, user.userSignUp)
+route.post('/user/login/:client/:ressource', permission.isAllowed, user.userlogin)
 
 // *** COMMON ROUTES ***
 route.get('/auth/token/:cred', user.getToken)
