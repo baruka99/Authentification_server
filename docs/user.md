@@ -104,7 +104,26 @@ Status\
  `200` : Success\
  `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
  `500`: Internal server error\
- `403`: Unauthorized\
+ `403`: Unauthorized
  
+
+## 2.2 Utilisateur final (End user)
+
+### 2.2.1 Creation du compte
+
+Nous avons pour cette première version une seule ressource avec différent client. Ces clients sont `Application mobile cliente, driver et agent L1000pay`. Ces clients permettrons aux utilistateurs finaux de pouvoir se connecter ou s'authentifier pour avoir accès aux ressoures demandées.
+
+```
+La clé du client et de la ressourse seront envoyées pour permettre au serveur d'authentification de pouvoir authentifer l'application cliente et de savoir s'il s'agit de la ressource de quel serveur de ressource que l'utilisateur final voudrait consulter.
+```
+Les roles sont important lors de la créaction du compte des utilisateurs final.
+
+Prendre pour roles ces derniers: 
+
+1. Basic : pour les utilisateurs finaux
+2. Autres role: selon la configuration de votre serveur de ressource, 
+
+`Le role de as super admin` ne doit pas etre choisi car l'utilisateur final ne sera jamais crée s'il utiliseur ce role comme privillege.
+
 
 

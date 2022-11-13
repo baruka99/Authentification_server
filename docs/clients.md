@@ -104,11 +104,111 @@ Le client dois passer sa clé d'authorisation et la ressource à laquelle l'util
 }
 ```
 
+### 2.1.3 Modification des informations du client
 
+La modification du client est très simple. Il suffit de passer via le body les éléments que l'on désire modfier. `A noter` que pour l'objet owner vous devez envoyer tout l'objet si vous aimerez modifier un élément de cet objet car sinon vous risquerez de perdre toute les données de cet objet owner. 
 
+Methode: `PUT`\
+EndPoint : `client/key`\
+Content-type: `application-json`\
+Authorization: `Super admin token` \
+Body: 
+```
+{   
+    "key": "value"
+ }
+```
+Responses payload: 
+```
+{
+    "message": String,
+    "client": {
+        "owner": {
+            "name": String,
+            "adminMail": String,
+            "enterprise": String,
+            "isInterne": bool,
+            "isRessource": bool
+        },
+        "description": String,
+        "subscribeTo": [
+            String
+        ],
+        "key": String
+    }
+}
+```
 
+Status\
+ `201` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized 
 
+### 2.1.4 Obtenir tout les clients
 
- 
-   
+Methode: `GET`\
+EndPoint : `clients`\
+Content-type: `application-json`\
+Authorization: `Super admin token` 
+
+Responses payload: 
+```
+{
+    "clients": [
+        {
+            "owner": {
+                "name": String,
+                "adminMail": String,
+                "enterprise": String,
+                "isInterne": bool,
+                "isRessource": bool
+            },
+            "description": String,
+            "subscribeTo": [
+               String
+            ],
+            "key": String
+        },
+     
+    ]
+}
+```
+
+Status\
+ `200` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized 
+
+### 2.1.4 Obtenir un client
+
+Methode: `GET`\
+EndPoint : `client/key`\
+Content-type: `application-json`\
+Authorization: `Super admin token` 
+
+Responses payload: 
+```
+    {
+            "owner": {
+                "name": String,
+                "adminMail": String,
+                "enterprise": String,
+                "isInterne": bool,
+                "isRessource": bool
+            },
+            "description": String,
+            "subscribeTo": [
+               String
+            ],
+            "key": String
+        }
+```
+
+Status\
+ `200` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized 
    
