@@ -5,22 +5,22 @@ const user = require('../controller/user')
 const client = require('../controller/client')
 
 
-// *** END USERS ***
-
-// Admin
+// *** SUPER ADMIN ***
 route.post('/auth/admin/super', user.sAdminSignUp)
 route.post('/login/admin/super', user.sAdminLogin)
 
 
-// Client app
+// *** CLIENT APPLICATION ***
 route.post('/client/register', permission.isAdmin, client.registerClient)
 route.get('/clients', permission.isAdmin, client.find)
 route.get('/client/:key', permission.isAdmin, client.findOne)
 route.put('/client/:key', permission.isAdmin, client.update)
 
+// *** END USERS ***
+route.post('/user/auth/:client/:ressource', permission.isAllowed, user.userSignUp)
 
-//common user route
-route.post('/auth/token/', user.getToken)
+// *** COMMON ROUTES ***
+route.get('/auth/token/:cred', user.getToken)
 
 
 route.get("/", (req, res) => {

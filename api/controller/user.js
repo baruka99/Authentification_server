@@ -69,7 +69,7 @@ exports.sAdminSignUp = (req, res) => {
                                                                     username: email,
                                                                     password: hash,
                                                                     user: savedUser,
-                                                                    role: "admin",
+                                                                    role: "as super admin",
                                                                     createdAt: Date.now()
                                                                 }
                                                             );
@@ -143,14 +143,9 @@ exports.sAdminLogin = async (req, res) => {
                 adminCredential.save()
                     .then(
                         (cred) => {
-                            console.log(creadential._id)
-                            res.status(200).json({
-                                message: "Vous avez été bien connecté",
-                                credId: {
-                                    id: cred._id,
-                                    value: creadential
-                                },
 
+                            res.status(200).json({
+                                cred: adminCredential.otpCode,
                             })
                         }
                     )
@@ -174,16 +169,83 @@ exports.sAdminLogin = async (req, res) => {
 }
 
 
-exports.getToken = async (req, res) => {
-    const { credId, value } = req.body;
-    console.log(req.body)
+/*
+
+END USER PART
+=============
+
+*/
+
+exports.userSignUp = async (req, res) => {
+    const { firstName, lastName, email, phone, password, role } = req.body;
+    const fullNumber = phone.code + phone.number;
     try {
-        const credential = await Credential.findById(credId).populate('user');
-        console.log(credential);
-        if (!credential || credential.otpCode != sha256(value)) res.status(409).json({
-            message: "Identifiants incorrect"
-        })
+
+        const cred = await Credential.findOne({ $or: [{ username: email, }, { username: fullNumber }] });
+        if (cred || role == 'as super admin') res.status(409).json({ message: "Conflit" })
+        else {
+
+            /* 
+              apart from the basic user, all other user will be 
+              signed up in the same way, like the driver, admin and agent
+              for this first version we have only the L1000pay client and the L1000pay 
+              ressource
+            */
+            const newUser = User({
+                _id: new mongoose.Types.ObjectId,
+                firstName, lastName, email, phone
+            })
+
+            await newUser.save();
+
+            // let crypt the password
+            const genPwd = sha256(randomString()); // for the user with other role than the basic role
+            const salt = await bcrypt.genSalt(10)
+            const cryptPass = await bcrypt.hash(role == 'basic' ? password : genPwd, salt);
+
+            const creadential = Credential(
+                {
+                    _id: new mongoose.Types.ObjectId,
+                    role, password: cryptPass,
+                    user: newUser,
+                    username: role == 'basic' ? fullNumber : email
+                }
+            )
+
+            if (role != 'basic') {
+                sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                const msg = {
+                    to: email,
+                    from: 'contact.upperz@gmail.com', //the email address or domain you verified above
+                    subject: 'Mot de passe compte L1000pay',
+                    text: "Voici votre mot de passe: " + genPwd,
+                    html: "Voici votre mot de passe: " + genPwd,
+                };
+                await sgMail.send(msg)
+            }
+
+            await creadential.save();
+
+            res.status(201).json({
+                message: "L'utilisateur a été enrégistré avec succès"
+            })
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+
+
+}
+
+exports.getToken = async (req, res) => {
+    const cred = req.params.cred;
+    try {
+        const credential = await Credential.findOne({ otpCode: cred }).populate('user');
+        if (!credential) res.status(409).json({ message: "Identifiant incorrect" })
+        credential.otpCode = undefined;
+        await credential.save();
         res.status(200).json({
+            message: "Vous avez été bien connecté",
             token: credential.token.refresh,
             user: {
                 email: credential.user.email,

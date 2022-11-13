@@ -1,51 +1,41 @@
-const { Client } = require('../models/client')
+const Client = require('../models/client')
 const Credential = require('../models/creadential')
 
 
-exports.isAllowed = (req, res, next) => {
+exports.isAllowed = async (req, res, next) => {
 
     // we will give to the client access if this one has respected those three conditions
     // 1. he is the client
     // 2. he has the full information about the ressourse he want to be redirect to
+    const { client, ressource } = req.params; // those are keys
 
-    const { clientKey, ressourceKey } = req.params;
-    Client.findOne(
-        { key: clientKey },
-        (err, client) => {
-            if (err) {
-                res.status(500).json(
-                    {
-                        message: err.message
-                    }
-                );
-            } else {
-                if (client) {
-                    Client.findOne(
-                        { key: ressourceKey },
-                        (err, ressource) => {
-                            if (err) {
-                                res.status(500).json(
-                                    {
-                                        message: err.message
-                                    }
-                                );
-                            } else {
-                                if (ressource) {
-                                    next();
-                                } else {
-                                    res.status(403).json();
-                                }
-                            }
-                        }
-                    )
-                } else {
-                    res.status(403).json();
+    try {
+        const resultClient = await Client.findOne({ key: client })
+        const resultRessource = await Client.findOne({ key: ressource })
+        if (resultClient && resultRessource) {
+
+            /* 
+            let check now if the client is suscribed to the ressource his want to 
+            achieve
+            */
+
+            let match = false;
+            for (let i = 0; i < resultClient.subscribeTo.length; i++) {
+                if (resultClient.subscribeTo[i] == resultRessource.key) {
+                    match = true
+                    break;
                 }
             }
 
-        }
-    )
+            if (match) next();
+            else res.status(403).json();
 
+        } else {
+            res.status(403).json();
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }
 
 
