@@ -1,11 +1,13 @@
 const { Client } = require('../models/client')
-const { Credential } = require('../models/creadential')
+const Credential = require('../models/creadential')
 
 
-function isAllowed(req, res, next) {
+exports.isAllowed = (req, res, next) => {
+
     // we will give to the client access if this one has respected those three conditions
     // 1. he is the client
     // 2. he has the full information about the ressourse he want to be redirect to
+
     const { clientKey, ressourceKey } = req.params;
     Client.findOne(
         { key: clientKey },
@@ -47,31 +49,24 @@ function isAllowed(req, res, next) {
 }
 
 
-function isAdmin(req, res, next) {
+exports.isAdmin = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1]
-    Credential.findOne(
-        {
-            token: {
-                access: token
-            }
-        }, (err, admin) => {
-            if (err)
-                res.status(500).json(
-                    {
-                        message: err.message
-                    }
-                );
-            if (admin != null && admin.role === "admin") {
-                res.locals.admin = admin
-                next();
-            }
-            res.status(403).json();
+    if (!token) res.status(403).json();
 
+    try {
+        const admin = await Credential.findOne({ token: { refresh: token } }).populate("user")
+
+        if (admin && admin.role === "admin") {
+            res.locals.admin = admin
+            next();
         }
-    ).populate("user")
-}
+        else {
+            res.status(403).json();
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
 
-exports.module = {
-    isAllowed,
-    isAdmin
 }
