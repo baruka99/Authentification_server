@@ -5,6 +5,7 @@ const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const { randomString, sha256 } = require('../shared/utils.js');
 const jwt = require('jsonwebtoken')
+const mailSender = require('../shared/mail')
 
 exports.sAdminSignUp = (req, res) => {
     const email = req.body.email;
@@ -32,7 +33,7 @@ exports.sAdminSignUp = (req, res) => {
                         from: 'contact.upperz@gmail.com', //the email address or domain you verified above
                         subject: 'Mot de passe compte admin L1000pay',
                         text: "Voici votre mot de passe admin: " + adminCode,
-                        html: "Voici votre mot de passe admin: " + adminCode,
+                        html: adminCode,
                     };
 
                     // sending the code to the admin and then save the admin
@@ -123,6 +124,9 @@ exports.sAdminLogin = async (req, res) => {
 
     bcrypt.compare(
         password, adminCredential.password, function (err, isCorrect) {
+            if (err) res.status(500).json({
+                message: err.message
+            })
             if (isCorrect) {
                 const refreshToken = jwt.sign(
                     {
@@ -172,34 +176,30 @@ exports.sAdminLogin = async (req, res) => {
 
 exports.getToken = async (req, res) => {
     const { credId, value } = req.body;
+    console.log(req.body)
+    try {
+        const credential = await Credential.findById(credId).populate('user');
+        console.log(credential);
+        if (!credential || credential.otpCode != sha256(value)) res.status(409).json({
+            message: "Identifiants incorrect"
+        })
+        res.status(200).json({
+            token: credential.token.refresh,
+            user: {
+                email: credential.user.email,
+                phone: credential.user.phone,
+                createdAt: credential.user.createdAt,
+                firstName: credential.user.firstName,
+                lastName: credential.user.lastName,
+            },
+        })
 
-    Credential.findById(credId, (err, credential) => {
-        if (err) {
-            res.status(500).json({
-                message: err.message
-            })
-        } else {
-            if (credential) {
-                if (credential.otpCode == sha256(value)) {
-                    res.status(200).json({
-                        token: credential.token.refresh,
-                        user: {
-                            email: credential.user.email,
-                            phone: credential.user.phone,
-                            createdAt: credential.user.createdAt,
-                            firstName: credential.user.firstName,
-                            lastName: credential.user.lastName,
-                        },
-                    })
-                }
-            } else {
-                res.status(409).json({
-                    message: "Identifiants incorrect"
-                })
-            }
-        }
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        })
+    }
 
-    }).populate('user')
 }
 
 // notice: in the login part the client must tel us the ressource that the end user looks for
