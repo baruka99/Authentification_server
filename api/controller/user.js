@@ -116,56 +116,33 @@ exports.sAdminSignUp = (req, res) => {
 // LOGIN ADMIN
 exports.sAdminLogin = async (req, res) => {
     const { username, password } = req.body;
-    const adminCredential = await Credential.findOne({ username }).populate('user');
 
-    if (!adminCredential) res.status(409).json({
-        message: "Identifiants incorrect"
-    })
+    try {
+        const adminCredential = await Credential.findOne({ username }).populate('user');
 
-    bcrypt.compare(
-        password, adminCredential.password, function (err, isCorrect) {
-            if (err) res.status(500).json({
-                message: err.message
+
+        if (!adminCredential) res.status(409).json({
+            message: "Identifiants incorrect"
+        })
+
+        const checkPwd = await bcrypt.compare(password, adminCredential.password)
+        if (!checkPwd) res.status(409).json({ message: "Identifiants incorrect" })
+        else {
+            const refreshToken = jwt.sign({ userId: adminCredential.user._id, }, 'secret', { expiresIn: "360d" });
+            const creadential = randomString()
+            adminCredential.token.refresh = refreshToken;
+            adminCredential.otpCode = sha256(creadential);
+            await adminCredential.save()
+            res.status(200).json({
+                cred: adminCredential.otpCode,
             })
-            if (isCorrect) {
-                const refreshToken = jwt.sign(
-                    {
-                        userId: adminCredential.user._id,
-                    },
-                    'secret',
-                    {
-                        expiresIn: "360d"
-                    }
-                );
-                const creadential = randomString()
-                adminCredential.token.refresh = refreshToken;
-                adminCredential.otpCode = sha256(creadential);
-                adminCredential.save()
-                    .then(
-                        (cred) => {
-
-                            res.status(200).json({
-                                cred: adminCredential.otpCode,
-                            })
-                        }
-                    )
-                    .catch(
-                        err => res.status(500).json(
-                            {
-                                message: err.message
-                            }
-                        )
-                    );
-            }
-
-            else {
-                res.status(409).json({
-                    message: "Identifiants incorrect"
-                })
-            }
         }
-    );
 
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        })
+    }
 }
 
 
@@ -233,8 +210,28 @@ exports.userSignUp = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
+}
 
+exports.userlogin = async (req, res) => {
+    const { username, password } = req.body;
 
+    try {
+        const credential = await Credential.findOne({ username });
+        if (!credential) res.status(409).json({ message: "Identifiants incorrect" })
+        else {
+            const checkPwd = await bcrypt.compare(password, credential.password)
+            if (!checkPwd) res.status(409).json({ message: "Identifiants incorrect" })
+            else {
+                credential.otpCode = sha256(randomString());
+                await credential.save()
+                res.status(200).json({
+                    cred: credential.otpCode,
+                })
+            }
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 }
 
 exports.getToken = async (req, res) => {
