@@ -77,7 +77,7 @@ Apres avoir recu ce code, ce dernier vous permettra d'optenir le token pour perm
 
 Methode: `GET`\
 EndPoint : `auth/token/cred`\
-Content-type: `application-json`\
+Content-type: `application-json`
 
 Responses payload: 
 ```

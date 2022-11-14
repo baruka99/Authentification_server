@@ -46,12 +46,12 @@ exports.isAdmin = async (req, res, next) => {
     try {
         const admin = await Credential.findOne({ token: { refresh: token } }).populate("user")
 
-        if (admin && admin.role === "admin") {
+        if (admin && admin.role === "as super admin") {
             res.locals.admin = admin
             next();
         }
         else {
-            res.status(403).json();
+            res.status(403).json({});
         }
     } catch (error) {
         res.status(500).json({

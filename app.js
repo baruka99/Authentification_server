@@ -53,6 +53,17 @@ app.use((req, res, next) => {
 });
 
 
+// *** THE LOG OF ALL THE REQUEST ***
+
+app.use((req, res, next) => {
+    console.log("hey am here on the finish part")
+    res.on("finish", () => {
+        console.log(`${req.method} ${res.statusCode}`)
+    })
+    next()
+})
+
+
 // this containes all about our routes and middlewires
 app.use('/api/v1', routes);
 app.use(express.static("uploads"));
