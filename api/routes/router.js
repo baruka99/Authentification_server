@@ -25,7 +25,8 @@ route.get('/auth/token/:cred', user.getToken)
 
 
 route.get("/", (req, res) => {
-    // console.log(req.headers);
+    console.log(req.originalUrl)
+    // console.log(req);
     res.status(200).json({
         headers: req.headers,
         message: "Welcome to the Account L1000 Services server"
