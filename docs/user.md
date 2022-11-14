@@ -96,7 +96,7 @@ Responses payload:
 
 Status\
  `200` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit,\
  `500`: Internal server error\
  `403`: Unauthorized
  
@@ -151,7 +151,7 @@ Responses payload:
 
 Status\
  `201` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit,\
  `500`: Internal server error\
  `403`: Unauthorized 
 
@@ -180,7 +180,7 @@ Responses payload:
 
 Status\
  `201` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit, \
  `500`: Internal server error\
  `403`: Unauthorized 
 
@@ -209,7 +209,7 @@ Responses payload:
 
 Status\
  `200` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit,\
  `500`: Internal server error\
  `403`: Unauthorized
 
