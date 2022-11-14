@@ -5,7 +5,7 @@ Le client est une plateforme permettant aux `utilisateurs finaux` (`end users`) 
 
 La platforme L1000 Services est un ecosystème qui est supceptible d'avoir au fil des année plusieurs clients et ressources, ce qui fait que chaque client devra avoir une identification unique dans la `plateforme` (entreprise). \
 \
-Pour s'assurer d'une bonne tracabilité et une bonne identifaction de nos clients, nous devons avoir toutes les informations jugées `nécessaires` en rapport avec le client qui accède dans notre système.A noter qu'un `client` peut etre une application mobile, web, desktop, une autre API; etc. et ce dernier peut etre interne ou externe. Ces informations sont les suivantes: \
+Pour s'assurer d'une bonne tracabilité et une bonne identifaction de nos clients, nous devons avoir toutes les informations jugées `nécessaires` en rapport avec le client qui accède dans notre système.A noter qu'un `client` peut etre une application mobile, web, desktop, une autre API; etc. et ce dernier peut etre interne ou externe. Ces informations sont les suivantes: 
 1. owner: celui-ci contiendra toutes les informations sur la denomination du client et les caractéristiques qui en découlent telle que : \
    a. `name` : la desigantion du client (nom du projet ou de l'application),\
    b. `adminMail`: l'adresse mail de l'adminisatrateur de la plateforme, ce dernier peut etre un `développeur simple` ou le `CEO`, ou encore le `CTO` de cette entreprise.
@@ -93,15 +93,10 @@ Status\
 
  ### 2.1.2.1 Implementation d'une application cliente
 
-Le client dois passer sa clé d'authorisation et la ressource à laquelle l'utilisateur final voudrait accéder dans l'en-tete de sa requete pour permettre au server d'authorisation de l'indetifier comme étant un client approuvé par la plateforme. 
+Le client dois passer sa clé d'authorisation et la ressource à laquelle l'utilisateur final voudrait accéder dans l'URL de sa requete pour permettre au server d'authorisation de l'indetifier comme étant un client approuvé par la plateforme. 
 
 ```
-{
-   ...
-   "ressource": "String"// la clé de la ressource
-   "Authorization" : "String" // this string is the authorization key of the client,
-   ...
-}
+.../clientKey/ressourceKey
 ```
 
 ### 2.1.3 Modification des informations du client
@@ -141,7 +136,7 @@ Responses payload:
 
 Status\
  `201` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit\
  `500`: Internal server error\
  `403`: Unauthorized 
 
@@ -190,7 +185,7 @@ Authorization: `Super admin token`
 
 Responses payload: 
 ```
-    {
+{
             "owner": {
                 "name": String,
                 "adminMail": String,
@@ -203,12 +198,12 @@ Responses payload:
                String
             ],
             "key": String
-        }
+}
 ```
 
 Status\
  `200` : Success\
- `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `409`: Conflit\
  `500`: Internal server error\
  `403`: Unauthorized 
    
