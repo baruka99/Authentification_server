@@ -73,18 +73,12 @@ Status\
  \
 Apres avoir recu ce code, ce dernier vous permettra d'optenir le token pour permettre d'effectuer les differente operations tel que la creation d'une application client dans la plateforme, les ressources, etc.\
 \
-3. obtention du token\
-\
-Methode: `POST`\
-EndPoint : `auth/token/`\
+3. obtention du token
+
+Methode: `GET`\
+EndPoint : `auth/token/cred`\
 Content-type: `application-json`\
-Body: 
-```
-{
-    "credId": "id",
-    "value": "code"
-}
-```
+
 Responses payload: 
 ```
 {
@@ -123,7 +117,100 @@ Prendre pour roles ces derniers:
 1. Basic : pour les utilisateurs finaux
 2. Autres role: selon la configuration de votre serveur de ressource, 
 
-`Le role de as super admin` ne doit pas etre choisi car l'utilisateur final ne sera jamais crée s'il utiliseur ce role comme privillege.
+`Le role de as super admin` ne doit pas etre choisi car l'utilisateur final ne sera jamais crée s'il utiliseur ce role.
 
+L'application cliente doit fournir au serveur d'authentification les `informations` de l'utilisateur final pour s'authentifier à la plateforme.
+
+Le serveur d'authentification une fois crée le compte de l'utilisateur final, il envera la réponse selon le role de l'utilisateur final. Tout les utilisateurs ayant un role `BASIC` c'est-à-dire les utilisateurs simples seront juste enrégistré d'une manière normale, il passeront via le body leurs informations suivis du mot de passe. Tandisque les autres utilisateurs finaux d'un autre role, n'enverons que leurs informations et le serveur d'authentification leur générera un mot de passe qui leur sera envoyé via l'addresse mail indiqué dans le formulaire.
+
+`A noter que` tout les autres utilisateurs autres que ceux ayant le role `BASIC` seront authentifié (avoir pour `username`) via leur addresse mail et les utilisateurs finaux ayant pour role `BASIC` utiliserons leur numéro de téléphone pour s'authentifier.
+
+Methode: `POST`\
+EndPoint : `user/signup/clientKey/ressourceKey`\
+Content-type: `application-json`\
+Body (exemple): 
+```
+{   
+    "firstName": String,
+    "lastName": String,
+    "email": String,
+    "phone": {
+        "code": String,
+        "number": String
+    },
+    "password": String,
+    "role": "driver"
+    }
+```
+Responses payload: 
+```
+{
+    "message":  "L'utilisateur a été enrégistré avec succès"
+}
+```
+
+Status\
+ `201` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized 
+
+ ### 2.2.2 Login
+
+L'authentification (login) dans notre plateforme se fais d'une manière classique, à la seule différence est qu'après l'authentification l'utilisateur final ne poura pas recevoir les informations tel que : `le token` et les informations de son compte. Une fous le serveur d'authorisation aura validé que les informations en rapport avec l'authentificaton de l'utilistateur final (y compris celles de l'application cliente) sont vrais alors le serveur d'authorisation lui envera une clé, cette clé sera envoyé au serveur de ressource et c'est le serveur de ressource qui l'octroyera un jeton d'accès (access token) et les inforation en rapport avec son compte. 
+
+Methode: `POST`\
+EndPoint : `user/login/clientKey/ressourceKey`\
+Content-type: `application-json`\
+Body: 
+```
+{
+    "username": String,
+    "password": String
+}
+```
+Responses payload: 
+```
+{
+    "cred":  String
+}
+```
+
+`cred` est bien la clé qui sera envoyé vers le serveur de ressource à partir de la quelle le serveur de ressource pourra auhentifier l'utilisateur final pour lui donner ses informations.
+
+Status\
+ `201` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized 
+
+ ### 2.2.3 Get user informations
+
+Chacun de serveur de ressource aura sa manière de formater leur requete pour l'obtention de jeton d'accès et des autres informations. D'une idée globale la requette poura avoir cette form.
+
+Methode: `GET`\
+EndPoint : `auth/token/cred`\
+Content-type: `application-json`\
+
+Responses payload: 
+```
+{
+    "token": "token",
+    "user": {
+        "email": "email",
+        "phone": {
+            "code": "code",
+            "number": "number"
+        },
+        "createdAt": "Date"
+    }
+}
+```
+
+Status\
+ `200` : Success\
+ `409`: Conflit, `cela peut etre du a un email déjà enrégistré dans la platefom`\
+ `500`: Internal server error\
+ `403`: Unauthorized
 
 
