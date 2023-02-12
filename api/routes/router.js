@@ -2,6 +2,7 @@ const express = require('express');
 const route = express.Router();
 const permission = require('../configs/permission')
 const user = require('../controller/user')
+const log = require('../controller/log')
 const client = require('../controller/client')
 
 
@@ -26,15 +27,13 @@ route.get('/auth/token/:cred', user.getToken)
 
 route.get("/", (req, res) => {
     console.log(req.originalUrl)
-    // console.log(req);
+
     res.status(200).json({
         headers: req.headers,
-        message: "Welcome to the Account L1000 Services server"
+        message: "Welcome to the Account Services server"
     });
 })
 
-route.post("/cspreport", (req, res) => {
-    console.log(req.body);
-})
+route.get("/logreport", permission.isAdmin, log.find)
 
 module.exports = route

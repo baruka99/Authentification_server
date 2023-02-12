@@ -8,6 +8,7 @@ const Client = require('../models/client')
 const { randomString, sha256 } = require('../shared/utils.js');
 const mailSender = require('../shared/mail');
 const client = require('../models/client');
+const { mail, clientMail } = require('../shared/mail')
 
 /* 
 consult the doc for more information about
@@ -32,7 +33,7 @@ function clientDataModel(data) {
 
 exports.registerClient = async (req, res) => {
     const { owner, description, subscribeTo, redirectUrl } = req.body;
-    console.log(owner.name)
+    console.log(subscribeTo)
     try {
         const client = await Client.findOne({ "owner.name": owner.name })
         if (client) {
@@ -47,9 +48,9 @@ exports.registerClient = async (req, res) => {
             const msg = {
                 to: owner.adminMail,
                 from: 'contact.upperz@gmail.com', //the email address or domain you verified above
-                subject: 'Clé client L1000 services',
-                text: "Voici votre clé client: " + clientKey,
-                html: clientKey,
+                subject: 'Clé client',
+                text: clientMail(clientKey, subscribeTo),
+                html: clientMail(clientKey, subscribeTo ?? "Aucune ressouce"),
             };
 
             //sending mail
@@ -69,6 +70,7 @@ exports.registerClient = async (req, res) => {
 
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json(
             {
                 message: err.message

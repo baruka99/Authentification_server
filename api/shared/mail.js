@@ -1,206 +1,93 @@
-function mail(code) {
-  return `<!DOCTYPE html>
-<html lang="en">
+function mail(code, to) {
+  return `
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mail L1000</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css" />
-</head>
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200&display=swap" rel="stylesheet">
 
-<body style="margin: 0; padding: 0">
-    <div style="width: 100%">
-        <div style="
-          padding: 0px;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          display: grid;
-        ">
-            <img src="./assets/icon.png" alt=" " style="
-            width: 150px;
-            align-items: center;
-            cursor: pointer;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            align-content: center;
-          " />
-            <div style="
-            /* box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-              rgba(27, 31, 35, 0.15) 0px 0px 0px 1px; */
-            border: solid 2px gray;
-            padding: 10px;
-            display: block;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px auto;
-            width: 100%;
-          ">
-                <h2 style="
-              text-align: center;
-              display: flex;
-              justify-content: center;
-              flex-direction: row;
-              flex-wrap: wrap;
-              align-items: center;
-              margin-bottom: 20px;
-              -webkit-margin-start: 0;
-              -webkit-margin-end: 0;
-              color: rgb(29, 29, 29);
-              letter-spacing: -0.005em;
-              line-height: 1.2;
-              margin-inline-end: 0;
-              margin-inline-start: 0;
-              font-weight: 700;
-            ">
-                    voici votre code !
-                </h2>
-                <p style="
-              text-align: center;
-              display: flex;
-              justify-content: center;
-              flex-direction: row;
-              flex-wrap: wrap;
-              align-items: center;
-              font-size: 14px;
-              margin-bottom: 20px;
-              -webkit-margin-start: 0;
-              -webkit-margin-end: 0;
-              color: rgb(29, 29, 29);
-              letter-spacing: -0.005em;
-              line-height: 1.2;
-              margin-inline-end: 0;
-              margin-inline-start: 0;
-              font-weight: 500;
-            ">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia, nulla, necessitatibus exercitationem eaque id, voluptas possimus officiis dignissimos magnam alias veritatis aut. Quam doloribus necessitatibus rem delectus nihil cupiditate dolore?
-                </p>
-                <div style="
-              align-items: center;
-              background-color: #f5f5f5;
-              cursor: pointer;
-              margin-top: 30px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              align-content: center;
-              padding: 10px;
-              color: black;
-              flex-direction: row;
-              flex-wrap: wrap;
-            ">
-                    <p style="
-                text-align: center;
-                font-size: 14px;
-                overflow-wrap: break-word;
-                width: 100%;
-              ">${code}</p>
-                </div>
-            </div>
-            <div style="
-            display: flex;
-            margin: 0 auto;
-            gap: 10px;
-            text-align: center;
-            margin-top: 30px;
-            /* 
-          justify-content: flex-start;
-          width: 100%;
-          flex-wrap: wrap;
-          align-items: auto;
-          align-self: center;
-        
-          gap: 5px;
-          row-gap: 5px;
-          */
-          ">
-                <a href="/index.html" target="_blank" style="
-              padding: 5px;
-              border: 0.5px solid gray;
-              width: 30px;
-              height: 30px;
-              border-radius: 100%;
-              display: flex;
-              text-align: center;
-              justify-content: center;
-              margin: 0 auto;
-              flex-wrap: wrap;
-              align-items: center;
-              align-self: center;
-              text-decoration: none;
-            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
-              class="fa-brands fa-facebook-f"
-              style="display: block; width: 15px; color: gray"
-            ></i
-          ></a>
-                <a href="/index.html " target="_blank " style="
-              padding: 5px;
-              border: 0.5px solid gray;
-              width: 30px;
-              height: 30px;
-              border-radius: 100%;
-              display: flex;
-              text-align: center;
-              justify-content: center;
-              margin: 0 auto;
-              flex-wrap: wrap;
-              align-items: center;
-              align-self: center;
-              text-decoration: none;
-            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
-              class="fa-brands fa-instagram"
-              style="display: block; width: 15px; color: gray"
-            ></i
-          ></a>
-                <a href="/index.html " target="_blank " style="
-              padding: 5px;
-              border: 0.5px solid gray;
-              width: 30px;
-              height: 30px;
-              border-radius: 100%;
-              display: flex;
-              text-align: center;
-              justify-content: center;
-              margin: 0 auto;
-              flex-wrap: wrap;
-              align-items: center;
-              align-self: center;
-              text-decoration: none;
-            " onmouseover="this.style.backgroundColor='blue' " onmouseout="this.style.backgroundColor=''"><i
-              class="fa-brands fa-linkedin-in"
-              style="display: block; width: 15px; color: gray"
-            ></i
-          ></a>
-            </div>
-            <div class="copy" style="
-            display: block;
-            text-align: center;
-            justify-content: center;
-            margin: 10px auto;
-            width: 50%;
-            flex-wrap: wrap;
-            align-items: auto;
-            align-self: center;
-            font-size: 12px;
-            color: gray;
-            font-weight: 100;
-          ">
-                <p>@copyright2022</p>
-                <p>l1000 tout droit reserver</p>
-            </div>
-        </div>
-    </div>
-</body>
 
-</html>`
+                  </head>
+                  <body style="width: 100%;">
+                    <div style="margin:10%;text-align: center;">
+                      <div style="width:100%;">
+                        <header style="background-color: #156BE7;padding: 20px;font-size: 20px;color: white; font-weight: bold;border-radius: 10px  10px 0px 0px">
+                          Mot de passe admin
+                        </header>
+
+                        <section style="background-color: #f5f5f5;padding: 5px; text-align: left; font-size: 14px;">
+                          <p style="width:70%;padding-left: 15%;padding-right: 15%;  ">Cher  utilisateur<br /><br />
+                            Nous avons reçu votre demande de validation de l'adresse e-mail ${to}. votre mot de passe est :<br> <br />
+                              <strong style='color:black;font-size: 20px; '>${code}</strong> <br /><br />
+                
+                              Si vous n'êtes  pas a l'origine de cette  demande,il est posssible qu'une tierce personne essaie d'effectuer une opération d'authentifaction avec votre compte;
+                              ne lui partagez pas ce code pour votre securité.   <br />  <br />
+                              Cordiallement <br /><br />
+                              L'equipe Upperz
+                          </p>
+                        </section>
+
+                        <footer style="background-color: #f5f5f5;padding: 20px;font-size: 16px; border-radius: 0px  0px 10px 10px">
+                          <hr>
+                            <p style="padding-top:10px;margin-bottom:4px;font-size: 12px">
+                              Powered by <a href="https://upper-z.com">Upperz</a>
+                            </p>
+                        </footer>
+                      </div>
+                    </div>
+                  </body>
+                </html>
+           `
 }
 
 
+let clientMail = (clientKey, subscribeTo) => `<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200&display=swap" rel="stylesheet">
 
 
-module.exports = mail
+    </head>
+<body style="width: 100%;">
+    <div style="margin:10%;text-align: center;">
+  <div style="width:100%;">
+    <header style="background-color: #156BE7;padding: 20px;font-size: 20px;color: white; font-weight: bold;border-radius: 10px  10px 0px 0px">
+       Compte client
+    </header>
+
+    <section style="background-color: #f5f5f5;padding: 5px; text-align: left; font-size: 14px;">
+        <p style="width:70%;padding-left: 15%;padding-right: 15%;  ">Cher  utilisateur  <b style="color: black;">Upperz community</b><br/><br/>
+            votrec compte client  a été crée avec succès. votre clé client est :<br> <br/>
+            <strong style='color:black;font-size: 20px; '>${clientKey}</strong> <br/><br/>
+             Clé ressource souscrit:${subscribeTo}<br/><br/>
+              Si vous n'êtes  pas a l'origine de cette  demande,il est posssible qu'une tierce personne essaie d'effectuer une opération d'authentifaction avec votre compte;
+              ne lui partagez pas ce code pour votre securité.   <br/>  <br/>
+              Cordiallement <br/><br/>
+              L'equipe Upperz
+            </p>
+    </section>
+    
+    <footer style="background-color: #f5f5f5;padding: 20px;font-size: 16px; border-radius: 0px  0px 10px 10px">
+        <hr>
+        <p style="padding-top:10px;margin-bottom:4px;font-size: 12px">
+       Powered by <a href="https://upper-z.com">Upperz</a>
+    </p>
+    </footer>
+     </div>
+   </div>
+</body>
+</html>`
+
+module.exports = {
+  mail,
+  clientMail
+}

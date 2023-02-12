@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const { randomString, sha256 } = require('../shared/utils.js');
 const jwt = require('jsonwebtoken')
-const mailSender = require('../shared/mail')
+const { mail, clientMail } = require('../shared/mail')
 
 exports.sAdminSignUp = async (req, res) => {
     const email = req.body.email;
@@ -20,9 +20,8 @@ exports.sAdminSignUp = async (req, res) => {
             const msg = {
                 to: email,
                 from: 'contact.upperz@gmail.com', //the email address or domain you verified above
-                subject: 'Mot de passe compte admin L1000pay',
-                text: "Voici votre mot de passe admin: " + adminCode,
-                html: adminCode,
+                subject: 'Mot de passe compte admin',
+                html: mail(adminCode, email),
             };
             await sgMail.send(msg)
             const salt = await bcrypt.genSalt(10)
@@ -48,7 +47,6 @@ exports.sAdminSignUp = async (req, res) => {
                 message: "L'administrateur a été bien enrégistré",
             });
 
-
         }
     } catch (err) {
         res.status(500).json({
@@ -61,6 +59,7 @@ exports.sAdminSignUp = async (req, res) => {
 // LOGIN ADMIN
 exports.sAdminLogin = async (req, res) => {
     const { username, password } = req.body;
+    console.log(req.body);
     try {
         const adminCredential = await Credential.findOne({ username }).populate('user');
 
@@ -109,8 +108,8 @@ exports.userSignUp = async (req, res) => {
             /* 
               apart from the basic user, all other user will be 
               signed up in the same way, like the driver, admin and agent
-              for this first version we have only the L1000pay client and the L1000pay 
-              ressource
+              for this first version we have only the  client and the  
+              ressource server
             */
             const newUser = User({
                 _id: new mongoose.Types.ObjectId,
@@ -138,8 +137,8 @@ exports.userSignUp = async (req, res) => {
                 const msg = {
                     to: email,
                     from: 'contact.upperz@gmail.com', //the email address or domain you verified above
-                    subject: 'Mot de passe compte L1000pay',
-                    text: "Voici votre mot de passe: " + genPwd,
+                    subject: 'Mot de passe compte',
+                    text: mailSender(genPwd),
                     html: mailSender(genPwd),
                 };
                 await sgMail.send(msg)

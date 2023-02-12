@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('./api/configs/config');
 const routes = require('./api/routes/router');
 const morgan = require('morgan');
+const Log = require('./api/models/log')
 
 
 const app = express();
@@ -21,7 +22,7 @@ mongoose.connect(config.dbUrl, { useNewUrlParser: true, useUnifiedTopology: true
     if (err)
         console.error(err);
     else
-        console.log("Connected to the Account l1000 service database");
+        console.log("Connected to the Account service database");
 });
 
 app.use(morgan('dev'));
@@ -57,16 +58,50 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
     console.log("hey am here on the finish part")
-    res.on("finish", () => {
-        console.log(`${req.method} ${res.statusCode}`)
+    res.on("finish", async () => {
+
+        try {
+
+            const log = new Log(
+                {
+                    _id: new mongoose.Types.ObjectId,
+                    statusCode: res.statusCode,
+                    methode: req.method,
+                    url: {
+                        url: req.url,
+                        base: req.baseUrl,
+                        originalUrl: req.originalUrl,
+                    },
+                    clientAddress: req.socket.remoteAddress,
+                    header: {
+                        rowHeaders: req.rawHeaders,
+                        query: req.query,
+                        params: req.params,
+                        headers: req.headers,
+                    },
+                    body: req.body,
+                    times: {
+                        startTime: req._startTime,
+                        addedAt: Date.now(),
+
+                    }
+
+                }
+            );
+            await log.save();
+        } catch (error) {
+            res.status(500).json({
+                message: "An error occured"
+            })
+        }
     })
+
     next()
 })
 
 
 // this containes all about our routes and middlewires
 app.use('/api/v1', routes);
-app.use(express.static("uploads"));
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

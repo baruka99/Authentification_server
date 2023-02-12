@@ -12,21 +12,30 @@ const mongoose = require('mongoose');
 
 module.exports = mongoose.model('Log', mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    url: String,
-    status: Number,
-    count: {
-        type: Number,
-        default: 0
+    statusCode: Number,
+    methode: String,
+    url: {
+        url: String,
+        base: String,
+        originalUrl: String,
     },
+    clientAddress: String,
     header: {
-        ipAddress: String,
+        rowHeaders: [String],
+        Headers: Object,
+        query: Object,
+        params: Object,
     },
+    body: Object,
     client: {
         typeClient: String,
         key: String,
     },
-    addedAt: {
-        type: Date,
-        default: Date.now
+    times: {
+        startTime: Date,
+        addedAt: {
+            type: Date,
+            default: Date.now
+        }
     }
 }))
