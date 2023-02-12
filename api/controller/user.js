@@ -59,7 +59,7 @@ exports.sAdminSignUp = async (req, res) => {
 // LOGIN ADMIN
 exports.sAdminLogin = async (req, res) => {
     const { username, password } = req.body;
-    console.log(req.body);
+
     try {
         const adminCredential = await Credential.findOne({ username }).populate('user');
 

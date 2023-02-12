@@ -57,7 +57,8 @@ app.use((req, res, next) => {
 // *** THE LOG OF ALL THE REQUEST ***
 
 app.use((req, res, next) => {
-    console.log("hey am here on the finish part")
+
+
     res.on("finish", async () => {
 
         try {

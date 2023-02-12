@@ -33,7 +33,7 @@ function clientDataModel(data) {
 
 exports.registerClient = async (req, res) => {
     const { owner, description, subscribeTo, redirectUrl } = req.body;
-    console.log(subscribeTo)
+
     try {
         const client = await Client.findOne({ "owner.name": owner.name })
         if (client) {
@@ -70,7 +70,7 @@ exports.registerClient = async (req, res) => {
 
         }
     } catch (err) {
-        console.log(err);
+
         res.status(500).json(
             {
                 message: err.message
