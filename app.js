@@ -91,6 +91,7 @@ app.use((req, res, next) => {
             );
             await log.save();
         } catch (error) {
+            console.log("hey am here 1");
             res.status(500).json({
                 message: "An error occured"
             })

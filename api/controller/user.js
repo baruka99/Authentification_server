@@ -5,6 +5,7 @@ const sgMail = require('@sendgrid/mail');
 const bcrypt = require('bcryptjs');
 const { randomString, sha256 } = require('../shared/utils.js');
 const jwt = require('jsonwebtoken')
+const jwt_decode = require("jwt-decode");
 const { mail, clientMail } = require('../shared/mail')
 
 exports.sAdminSignUp = async (req, res) => {
@@ -183,16 +184,14 @@ exports.getToken = async (req, res) => {
         const credential = await Credential.findOne({ otpCode: cred }).populate('user');
         if (!credential) res.status(409).json({ message: "Identifiant incorrect" })
         credential.otpCode = undefined;
+        const access = jwt.sign({ userId: credential.user._id, role: credential.role }, 'secret', { expiresIn: "360d" });
+        credential.token.access = access
         await credential.save();
         res.status(200).json({
             message: "Vous avez été bien connecté",
-            token: credential.token.refresh,
-            user: {
-                email: credential.user.email,
-                phone: credential.user.phone,
-                createdAt: credential.user.createdAt,
-                firstName: credential.user.firstName,
-                lastName: credential.user.lastName,
+            token: {
+                refress: credential.token.refresh,
+                access: access
             },
         })
 
@@ -206,6 +205,55 @@ exports.getToken = async (req, res) => {
 
 // notice: in the login part the client must tel us the ressource that the end user looks for
 
+
+// the ressource server part
+
+exports.getResourceToken = async (req, res) => {
+
+    try {
+
+        const accessToken = req.headers.authorization.split(" ")[1]
+        if (!accessToken) res.status(403).json();
+        console.log(accessToken)
+        const creadential = await Credential.findOne({ token: { access: accessToken } });
+        if (!creadential) res.status(409).json({ message: "Identifiant incorrect" })
+        creadential.token.access = undefined;
+        const ressource = jwt.sign({ userId: creadential.user._id, role: creadential.role, type_token: "ressource" }, 'secret', { expiresIn: "360d" });
+        creadential.token.ressource = ressource;
+        creadential.save();
+        res.status(200).json({
+            token: {
+                ressource: ressource
+            },
+        })
+    } catch (err) {
+        console.log("hey am here");
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+exports.getUserInfo = async (req, res) => {
+
+    try {
+        const accessToken = req.headers.authorization.split(" ")[1]
+        if (!accessToken) res.status(403).json();
+        var decodedToken = jwt_decode(accessToken);
+
+        console.log(decodedToken)
+        const user = await User.findById(decodedToken.userId);
+        if (!user) res.status(409).json({ message: "Identifiant incorrect" })
+        res.status(200).json({
+            user
+        })
+    } catch (err) {
+        console.log("hey am here");
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}
 
 
 

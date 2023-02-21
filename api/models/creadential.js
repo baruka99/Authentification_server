@@ -12,6 +12,7 @@ module.exports = mongoose.model("Credential", mongoose.Schema({
     token: {
         refresh: String,
         access: String,
+        ressource: String,
     },
     role: String, // BASIC,AS USER ADMIN,USER,AGENT,DRIVER
     // this is the hash funchtion, we may take the date of today to hash or an

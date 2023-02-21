@@ -23,6 +23,11 @@ route.post('/user/login/:client/:ressource', permission.isAllowed, user.userlogi
 
 // *** COMMON ROUTES ***
 route.get('/auth/token/:cred', user.getToken)
+route.get('/auth/tokenres/', user.getResourceToken)
+
+// ressource server part
+
+route.get('/ressource/user', user.getUserInfo)
 
 
 route.get("/", (req, res) => {
